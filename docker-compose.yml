@@ -1,0 +1,45 @@
+version: "3.3"
+services:
+  kafka:
+    image: bitnami/kafka:3.5.1
+    environment:
+      - KAFKA_CFG_NODE_ID=1
+      - KAFKA_CFG_PROCESS_ROLES=broker,controller
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@localhost:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+      - KAFKA_CLUSTER_ID=jCeM3QzcRv6T007Cb19a2Q
+    ports:
+      - "9092:9092"
+
+  users-api:
+    build: ./users-api
+    ports:
+      - "8081:3001"
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      - kafka
+
+  model-downloader:
+    build:
+      context: ./model_downloader
+    volumes:
+      - ./models:/models
+    restart: "no"     # don't restart after exit
+
+  inference-worker:
+    build:
+      context: ./inference-worker
+    environment:
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - MODEL_PATH=/models
+    depends_on:
+      - kafka
+      - model-downloader
+    volumes:
+      - ./models:/models
+      - /etc/OpenCL:/etc/OpenCL:ro
+    privileged: true
