@@ -28,10 +28,6 @@ WORKDIR /app/tensorflow
 
 RUN bazel build -c opt \
     --copt=-DTFLITE_GPU_USE_OPENCL \
-<<<<<<< HEAD
-    //tensorflow/lite/delegates/gpu:libtensorflowlite_gpu_delegate.so
-
-=======
     --copt=-DCL_DELEGATE_NO_GL \
     //tensorflow/lite/delegates/gpu:libtensorflowlite_gpu_delegate.so
 
@@ -39,12 +35,13 @@ RUN cp \
     bazel-bin/tensorflow/lite/delegates/gpu/libtensorflowlite_gpu_delegate.so \
     /usr/lib/
 
->>>>>>> 9440a547f3e543450f521f982f07aff066ff9320
 RUN rm -rf /app/tensorflow
 
 WORKDIR /app
 
 COPY worker.py .
+
+COPY libs/* /usr/lib/x86_64-linux-gnu/
 
 VOLUME /models
 
