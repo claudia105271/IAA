@@ -178,12 +178,11 @@
             };
 
             addRow('Label', result.label);
-            addRow('Number of inferences', result.numer_of_inferences);
+            addRow('Model', result.model);
             addRow('Confidence', (result.confidence * 100).toFixed(2) + '%');
             addRow('Label Frequency', result.label_frequency + '%');
-            addRow('Inference Time', (result.inference_time * 1000).toFixed(2) + ' ms');
-            addRow('Model', result.model);
-
+            addRow('Avg Inference Time', (result.avg_inference_time * 1000).toFixed(2) + ' ms ± ' +
+			      (result.sdv_inference_time * 1000).toFixed(2) + ' ms');			    
             table.appendChild(tbody);
             resultElem.appendChild(table);
 

@@ -123,7 +123,9 @@ if __name__ == "__main__":
             print(f"Error during model inference (invoke): {e}", flush=True)
             raise
 
-        avg_inference_time = sum(inference_times) / len(inference_times)
+        arr = np.array(inference_times)
+        avg_inference_time = np.mean(arr)
+        sdv_inference_time = np.std(arr)
 
         # Find the label with the highest frequency among the top predictions,
         # breaking ties by highest confidence
@@ -148,9 +150,9 @@ if __name__ == "__main__":
         result_payload = {
             "job_id": job.get("job_id", f"job_{int(time.time())}"),
             "label": labels[best_idx],
-            "number_of_iterations": n_inferences, 
             "confidence": float(best_confidence),
-            "inference_time": float(avg_inference_time),
+            "avg_inference_time": float(avg_inference_time),
+            "sdv_inference_time": float(sdv_inference_time),
             "label_frequency": label_frequency,
             "model": model_name
         }
