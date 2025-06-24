@@ -33,9 +33,6 @@ def preprocess_image(img_data, model):
     return img
 
 if __name__ == "__main__":
-    # result = subprocess.run(['clinfo'], capture_output=True, text=True)
-    # print("Connected to GPU:", flush=True)
-    # print(result.stdout, flush=True)
     n_inferences = 10
     label_path = "/models/imagenet_labels.json"
     model_paths = {
