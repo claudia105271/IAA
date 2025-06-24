@@ -2,9 +2,10 @@ import tensorflow as tf
 import json
 import urllib.request
 import os
+import traceback
+import sys
 
 MODEL_DIR = "/models"
-os.makedirs(MODEL_DIR, exist_ok=True)
 
 def convert_and_save(model_name):
     filename = os.path.join(MODEL_DIR, f"{model_name}.tflite")
@@ -28,15 +29,17 @@ def convert_and_save(model_name):
 
 
 if __name__ == "__main__":
-    model_names = ["mobilenet_v2", "inception_v3", "resnet50"]
-    
-    # Download models
-    for name in model_names:
-        convert_and_save(name)
-    
-    # Download labels
-    filename = os.path.join(MODEL_DIR, "imagenet_labels.json")
-    if not os.path.exists(filename):
-        url = "https://raw.githubusercontent.com/anishathalye/imagenet-simple-labels/master/imagenet-simple-labels.json"
-        urllib.request.urlretrieve(url, filename)
-        print(f"Downloaded ImageNet labels to {filename}")
+    try:
+        model_names = ["mobilenet_v2", "inception_v3", "resnet50"]
+
+        for name in model_names:
+            convert_and_save(name)
+
+        filename = os.path.join(MODEL_DIR, "imagenet_labels.json")
+        if not os.path.exists(filename):
+            url = "https://raw.githubusercontent.com/anishathalye/imagenet-simple-labels/master/imagenet-simple-labels.json"
+            urllib.request.urlretrieve(url, filename)
+            print(f"Downloaded ImageNet labels to {filename}")
+
+    except Exception as e:
+        print(f"Error occurred: {e}")

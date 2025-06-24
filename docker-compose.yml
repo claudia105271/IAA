@@ -23,13 +23,6 @@ services:
     depends_on:
       - kafka
 
-  model-downloader:
-    build:
-      context: ./model_downloader
-    volumes:
-      - ./models:/models
-    restart: "no"     # don't restart after exit
-
   inference-worker:
     build:
       context: ./inference-worker
@@ -38,7 +31,6 @@ services:
       - MODEL_PATH=/models
     depends_on:
       - kafka
-      - model-downloader
     volumes:
       - ./models:/models
       - /etc/OpenCL:/etc/OpenCL:ro
