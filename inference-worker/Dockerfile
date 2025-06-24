@@ -4,7 +4,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
-# Install dependencies including Python 3.10, Bazel, OpenCL
+# Install dependencies of tflite: Python 3.10, Bazel 7.4.1, OpenCL
 RUN apt-get update && apt-get install -y \
     git curl \
     ocl-icd-libopencl1 \
