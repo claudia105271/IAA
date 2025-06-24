@@ -4,24 +4,23 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
-# Install dependencies including Python 3.10, Bazel, OpenCL, and build tools
+# Install dependencies including Python 3.10, Bazel, OpenCL
 RUN apt-get update && apt-get install -y \
-    wget git cmake curl \
-    gnupg \
+    git curl \
     ocl-icd-libopencl1 \
     ocl-icd-opencl-dev \
-    python3.10 python3.10-venv python3.10-distutils python3-pip \
+    python3.10 python3-pip \
     && rm -rf /var/lib/apt/lists/*
-
-RUN curl -LO "https://github.com/bazelbuild/bazel/releases/download/7.4.1/bazel-7.4.1-linux-x86_64" \
-  && chmod +x bazel-7.4.1-linux-x86_64 \
-  && mv bazel-7.4.1-linux-x86_64 /usr/local/bin/bazel
 
 COPY requirements.txt .
 
 RUN python3.10 -m pip install --no-cache-dir -r requirements.txt
 
 # Build TFlite GPU delegate
+RUN curl -LO "https://github.com/bazelbuild/bazel/releases/download/7.4.1/bazel-7.4.1-linux-x86_64" \
+  && chmod +x bazel-7.4.1-linux-x86_64 \
+  && mv bazel-7.4.1-linux-x86_64 /usr/local/bin/bazel
+
 RUN git clone --depth=1 https://github.com/tensorflow/tensorflow.git /app/tensorflow
 
 WORKDIR /app/tensorflow
@@ -37,6 +36,7 @@ RUN cp \
 
 RUN rm -rf /app/tensorflow
 
+# Run main code
 WORKDIR /app
 
 COPY worker.py .
