@@ -2,10 +2,9 @@ import tensorflow as tf
 import json
 import urllib.request
 import os
-import traceback
-import sys
 
-MODEL_DIR = "/models"
+MODEL_DIR = os.path.join(os.getcwd(), "models")
+os.makedirs(MODEL_DIR, exist_ok=True)
 
 def convert_and_save(model_name):
     filename = os.path.join(MODEL_DIR, f"{model_name}.tflite")
