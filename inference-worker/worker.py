@@ -5,7 +5,6 @@ import tflite_runtime.interpreter as tflite
 import base64
 import json
 import time
-import subprocess
 import numpy as np
 import io
 import os
